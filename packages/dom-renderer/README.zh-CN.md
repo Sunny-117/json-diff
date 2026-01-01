@@ -525,4 +525,4 @@ MIT
 
 ## 支持
 
-如果您遇到任何问题或有疑问，请在我们的 [GitHub 仓库](https://github.com/yourusername/json-visual-diff) 上提交 issue。
+如果您遇到任何问题或有疑问，请在我们的 [GitHub 仓库](https://github.com/Sunny-117/json-visual-diff) 上提交 issue。
