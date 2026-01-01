@@ -103,7 +103,6 @@ EOF
 
 # 9. 初始化 git 仓库
 print_info "初始化部署仓库..."
-rm -rf packages/playground/dist/.git
 git init
 git add -A
 
