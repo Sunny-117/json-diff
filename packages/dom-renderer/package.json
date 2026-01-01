@@ -1,0 +1,42 @@
+{
+  "name": "@json-visual-diff/dom-renderer",
+  "version": "0.0.1",
+  "description": "JSON Visual Diff DOM 渲染器",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "json",
+    "diff",
+    "dom",
+    "renderer",
+    "visualization"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@json-visual-diff/core": "workspace:*"
+  },
+  "devDependencies": {
+    "fast-check": "^3.22.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
