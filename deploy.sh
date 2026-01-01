@@ -103,6 +103,7 @@ EOF
 
 # 9. 初始化 git 仓库
 print_info "初始化部署仓库..."
+rm -rf packages/playground/dist/.git
 git init
 git add -A
 
@@ -112,7 +113,7 @@ git commit -m "deploy: playground $(date '+%Y-%m-%d %H:%M:%S')"
 
 # 11. 推送到 GitHub Pages
 print_info "推送到 GitHub Pages..."
-git push -f https://github.com/Sunny-117/json-diff.git main:gh-pages
+git push -f https://github.com/Sunny-117/json-visual-diff.git main:gh-pages
 
 # 12. 清理
 print_info "清理临时文件..."
@@ -120,5 +121,5 @@ cd ../..
 rm -rf packages/playground/dist/.git
 
 print_success "部署完成！"
-print_info "Playground 地址: https://sunny-117.github.io/json-diff/"
+print_info "Playground 地址: https://sunny-117.github.io/json-visual-diff/"
 print_info "可能需要几分钟时间生效"

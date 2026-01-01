@@ -6,5 +6,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: "/json-diff/",
+  base: "/json-visual-diff/",
 });
