@@ -39,7 +39,7 @@ function App() {
       // 创建渲染器并渲染
       const renderer = new DOMRenderer({
         theme: "light",
-        expandDepth: 3,
+        expandDepth: 10,
         showUnchanged: true,
       });
 

@@ -7,7 +7,7 @@ import {
   DiffOptions,
   RendererConfig,
   Renderer,
-} from "./types.js";
+} from "./types";
 
 describe("核心类型定义", () => {
   describe("DiffType 枚举", () => {

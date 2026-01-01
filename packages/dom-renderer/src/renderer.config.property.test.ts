@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from "vitest";
 import fc from "fast-check";
-import { DOMRenderer } from "./renderer.js";
+import { DOMRenderer } from "./renderer";
 import type { DiffResult, DiffNode, RendererConfig } from "@json-visual-diff/core";
 
 describe("DOM Renderer Config Property Tests", () => {

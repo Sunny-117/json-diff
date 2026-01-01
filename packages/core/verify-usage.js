@@ -1,5 +1,5 @@
 // 验证核心包可以独立使用的简单测试脚本
-import { diff, DiffType } from "./dist/index.js";
+import { diff, DiffType } from "./dist/index";
 
 // 测试基本功能
 const obj1 = {

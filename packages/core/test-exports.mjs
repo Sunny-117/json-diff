@@ -1,5 +1,5 @@
 // 测试构建后的模块导出
-import * as coreModule from "./dist/index.js";
+import * as coreModule from "./dist/index";
 
 console.log("🧪 测试核心包构建输出...\n");
 

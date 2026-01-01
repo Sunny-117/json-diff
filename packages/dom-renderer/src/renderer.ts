@@ -4,7 +4,7 @@
  */
 
 import type { DiffResult, DiffNode, Renderer, RendererConfig } from "@json-visual-diff/core";
-import { getThemeColors, type ThemeColors } from "./styles.js";
+import { getThemeColors, type ThemeColors } from "./styles";
 
 /**
  * DOM 渲染器类

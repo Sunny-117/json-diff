@@ -1,4 +1,4 @@
-import { DiffType, ValueType, DiffNode, DiffResult } from "./types.js";
+import { DiffType, ValueType, DiffNode, DiffResult } from "./types";
 
 /**
  * Diff Result 构建器

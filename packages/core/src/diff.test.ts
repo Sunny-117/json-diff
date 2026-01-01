@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { diff, DiffEngine } from "./diff.js";
-import { DiffType, ValueType } from "./types.js";
+import { diff, DiffEngine } from "./diff";
+import { DiffType, ValueType } from "./types";
 
 /**
  * 核心 Diff Engine 单元测试

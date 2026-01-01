@@ -1,6 +1,6 @@
-import { DiffType, ValueType, DiffNode, DiffResult, DiffOptions } from "./types.js";
-import { TypeNormalizer } from "./normalizer.js";
-import { LCSArrayDiff } from "./lcs.js";
+import { DiffType, ValueType, DiffNode, DiffResult, DiffOptions } from "./types";
+import { TypeNormalizer } from "./normalizer";
+import { LCSArrayDiff } from "./lcs";
 
 /**
  * 核心 Diff 引擎类

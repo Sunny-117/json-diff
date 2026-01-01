@@ -1,4 +1,4 @@
-import { TypeNormalizer } from "./normalizer.js";
+import { TypeNormalizer } from "./normalizer";
 
 /**
  * 数组 Diff 操作类型
