@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { JSONEditor } from './components/JSONEditor';
-import { validateJSON } from './utils/jsonValidator';
+import { MonacoEditor } from './components/MonacoEditor';
+import { EditorSettings, loadPreferences, type EditorPreferences } from './components/EditorSettings';
 import { diff } from '@json-visual-diff/core';
 import { DOMRenderer } from '@json-visual-diff/dom-renderer';
 import type { DiffResult } from '@json-visual-diff/core';
@@ -14,6 +14,7 @@ function App() {
   const [diffResult, setDiffResult] = useState<DiffResult | null>(null);
   const [error, setError] = useState<string>('');
   const [selectedExample, setSelectedExample] = useState<string>('');
+  const [preferences, setPreferences] = useState<EditorPreferences>(loadPreferences());
   const resultContainerRef = useRef<HTMLDivElement>(null);
 
   // 当 diffResult 改变时，使用 DOM 渲染器渲染结果
@@ -187,20 +188,6 @@ function App() {
     setError('');
     setDiffResult(null);
 
-    // 验证两个 JSON 输入
-    const leftValidation = validateJSON(leftJson);
-    const rightValidation = validateJSON(rightJson);
-
-    if (!leftValidation.isValid) {
-      setError(`原始 JSON 错误: ${leftValidation.error}`);
-      return;
-    }
-
-    if (!rightValidation.isValid) {
-      setError(`新 JSON 错误: ${rightValidation.error}`);
-      return;
-    }
-
     if (!leftJson.trim() || !rightJson.trim()) {
       setError('请输入要比较的 JSON 数据');
       return;
@@ -272,47 +259,57 @@ function App() {
           >
             💾 导出 HTML
           </button>
+          <EditorSettings
+            preferences={preferences}
+            onPreferencesChange={setPreferences}
+          />
         </div>
       </div>
 
-      <div className="editor-container">
-        <JSONEditor
-          value={leftJson}
-          onChange={setLeftJson}
-          placeholder="在此输入原始 JSON..."
-          title="原始 JSON"
-        />
+      <div className="main-layout">
+        <div className="editors-panel">
+          <MonacoEditor
+            value={leftJson}
+            onChange={setLeftJson}
+            title="原始 JSON (Old)"
+            theme={preferences.theme}
+            fontSize={preferences.fontSize}
+            minimap={preferences.minimap}
+          />
 
-        <div className="compare-section">
-          <button className="compare-button" onClick={handleCompare}>
-            比较 →
-          </button>
+          <MonacoEditor
+            value={rightJson}
+            onChange={setRightJson}
+            title="新 JSON (New)"
+            theme={preferences.theme}
+            fontSize={preferences.fontSize}
+            minimap={preferences.minimap}
+          />
+          
+          <div className="compare-section">
+            <button className="compare-button" onClick={handleCompare}>
+              比较差异
+            </button>
+          </div>
         </div>
 
-        <JSONEditor
-          value={rightJson}
-          onChange={setRightJson}
-          placeholder="在此输入新 JSON..."
-          title="新 JSON"
-        />
-      </div>
-
-      <div className="result-container">
-        <div className="result-header">
-          <h2>差异结果</h2>
-          {diffResult && (
-            <div className="result-stats">
-              <span className="stat-label">统计:</span>
-              <span className="stat-item added">+{diffResult.stats.added}</span>
-              <span className="stat-item deleted">-{diffResult.stats.deleted}</span>
-              <span className="stat-item modified">~{diffResult.stats.modified}</span>
-              <span className="stat-item unchanged">={diffResult.stats.unchanged}</span>
-            </div>
-          )}
-        </div>
-        <div className="result-content" ref={resultContainerRef}>
-          {error && <div className="error-message">{error}</div>}
-          {!error && !diffResult && <div className="placeholder">点击"比较"按钮查看差异</div>}
+        <div className="result-panel">
+          <div className="result-header">
+            <h2>差异结果</h2>
+            {diffResult && (
+              <div className="result-stats">
+                <span className="stat-label">统计:</span>
+                <span className="stat-item added">+{diffResult.stats.added}</span>
+                <span className="stat-item deleted">-{diffResult.stats.deleted}</span>
+                <span className="stat-item modified">~{diffResult.stats.modified}</span>
+                <span className="stat-item unchanged">={diffResult.stats.unchanged}</span>
+              </div>
+            )}
+          </div>
+          <div className="result-content" ref={resultContainerRef}>
+            {error && <div className="error-message">{error}</div>}
+            {!error && !diffResult && <div className="placeholder">点击"比较差异"按钮查看结果</div>}
+          </div>
         </div>
       </div>
     </div>

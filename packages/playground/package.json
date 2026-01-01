@@ -15,6 +15,8 @@
   "dependencies": {
     "@json-visual-diff/core": "workspace:*",
     "@json-visual-diff/dom-renderer": "workspace:*",
+    "@monaco-editor/react": "^4.6.0",
+    "monaco-editor": "^0.52.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
