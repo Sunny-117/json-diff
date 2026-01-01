@@ -67,6 +67,7 @@ new DOMRenderer(config?: RendererConfig)
 ```
 
 **Parameters:**
+
 - `config?: RendererConfig` - Optional renderer configuration
 
 **Example:**
@@ -93,6 +94,7 @@ const renderer = new DOMRenderer({
 Renders a complete diff result into an HTML element.
 
 **Parameters:**
+
 - `diffResult: DiffResult` - The diff result from `@json-visual-diff/core`
 - `config?: RendererConfig` - Optional configuration to override constructor config
 
@@ -112,6 +114,7 @@ const element = renderer.render(result, {
 Renders a single diff node into an HTML element.
 
 **Parameters:**
+
 - `node: DiffNode` - A single diff node
 - `config?: RendererConfig` - Optional configuration
 
@@ -128,6 +131,7 @@ const nodeElement = renderer.renderNode(result.root);
 Renders a node that was added.
 
 **Parameters:**
+
 - `node: DiffNode` - The added node
 - `config?: RendererConfig` - Optional configuration
 
@@ -138,6 +142,7 @@ Renders a node that was added.
 Renders a node that was deleted.
 
 **Parameters:**
+
 - `node: DiffNode` - The deleted node
 - `config?: RendererConfig` - Optional configuration
 
@@ -148,6 +153,7 @@ Renders a node that was deleted.
 Renders a node that was modified.
 
 **Parameters:**
+
 - `node: DiffNode` - The modified node
 - `config?: RendererConfig` - Optional configuration
 
@@ -158,6 +164,7 @@ Renders a node that was modified.
 Renders a node that was unchanged.
 
 **Parameters:**
+
 - `node: DiffNode` - The unchanged node
 - `config?: RendererConfig` - Optional configuration
 
@@ -168,6 +175,7 @@ Renders a node that was unchanged.
 Toggles the expand/collapse state of a node at the given path.
 
 **Parameters:**
+
 - `path: string[]` - The path to the node
 
 **Example:**
@@ -181,6 +189,7 @@ renderer.toggleExpand(['user', 'address']);
 Checks if a node at the given path is expanded.
 
 **Parameters:**
+
 - `path: string[]` - The path to the node
 
 **Returns:** `boolean`
@@ -213,6 +222,7 @@ const renderer = new DOMRenderer({ theme: 'light' });
 ```
 
 Default colors:
+
 - Added: `#22863a` (green)
 - Deleted: `#cb2431` (red)
 - Modified: `#e36209` (orange)
@@ -225,6 +235,7 @@ const renderer = new DOMRenderer({ theme: 'dark' });
 ```
 
 Default colors:
+
 - Added: `#28a745` (green)
 - Deleted: `#d73a49` (red)
 - Modified: `#f97583` (pink)
@@ -335,7 +346,7 @@ The renderer generates the following HTML structure:
     <span class="stat-deleted" aria-label="1 items deleted">-1</span>
     <span class="stat-modified" aria-label="2 items modified">~2</span>
   </div>
-  
+
   <!-- Content -->
   <div class="json-diff-content" role="tree">
     <div class="diff-node diff-modified" role="treeitem" aria-label="Modified: root">
@@ -452,18 +463,18 @@ import { DOMRenderer } from '@json-visual-diff/dom-renderer';
 
 function DiffViewer({ oldValue, newValue }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (containerRef.current) {
       const result = diff(oldValue, newValue);
       const renderer = new DOMRenderer({ theme: 'light' });
       const element = renderer.render(result);
-      
+
       containerRef.current.innerHTML = '';
       containerRef.current.appendChild(element);
     }
   }, [oldValue, newValue]);
-  
+
   return <div ref={containerRef} />;
 }
 ```
@@ -488,7 +499,7 @@ const renderDiff = () => {
     const result = diff(props.oldValue, props.newValue);
     const renderer = new DOMRenderer({ theme: 'dark' });
     const element = renderer.render(result);
-    
+
     container.value.innerHTML = '';
     container.value.appendChild(element);
   }

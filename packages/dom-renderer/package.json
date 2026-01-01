@@ -2,6 +2,18 @@
   "name": "@json-visual-diff/dom-renderer",
   "version": "0.0.1",
   "description": "DOM 渲染器，将差异结果渲染为可交互的浏览器 DOM 元素，支持主题切换、无障碍访问和键盘导航",
+  "keywords": [
+    "diff",
+    "dom",
+    "json",
+    "renderer",
+    "visualization"
+  ],
+  "license": "MIT",
+  "author": "",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -13,9 +25,6 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsdown",
     "build:watch": "tsdown --watch",
@@ -23,15 +32,6 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": [
-    "json",
-    "diff",
-    "dom",
-    "renderer",
-    "visualization"
-  ],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "@json-visual-diff/core": "workspace:*"
   },

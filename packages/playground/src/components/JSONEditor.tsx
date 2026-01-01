@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { validateJSON, type ValidationResult } from '../utils/jsonValidator';
-import './JSONEditor.css';
+import { useState, useEffect } from "react";
+import { validateJSON, type ValidationResult } from "../utils/jsonValidator";
+import "./JSONEditor.css";
 
 interface JSONEditorProps {
   value: string;
@@ -24,21 +24,19 @@ export function JSONEditor({ value, onChange, placeholder, title }: JSONEditorPr
 
   return (
     <div className="json-editor-container">
-      <div className={`editor-header ${!validation.isValid ? 'error' : ''}`}>
+      <div className={`editor-header ${!validation.isValid ? "error" : ""}`}>
         <h2>{title}</h2>
-        {!validation.isValid && (
-          <span className="error-badge">语法错误</span>
-        )}
+        {!validation.isValid && <span className="error-badge">语法错误</span>}
       </div>
-      
+
       <textarea
-        className={`json-textarea ${!validation.isValid ? 'error' : ''}`}
+        className={`json-textarea ${!validation.isValid ? "error" : ""}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         spellCheck={false}
       />
-      
+
       {!validation.isValid && validation.error && (
         <div className="error-message">
           <span className="error-icon">⚠️</span>

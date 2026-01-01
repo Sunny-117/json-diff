@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import './EditorSettings.css';
+import { useState, useEffect } from "react";
+import "./EditorSettings.css";
 
 export interface EditorPreferences {
-  theme: 'light' | 'vs-dark';
+  theme: "light" | "vs-dark";
   fontSize: number;
   minimap: boolean;
 }
@@ -12,7 +12,7 @@ interface EditorSettingsProps {
   onPreferencesChange: (preferences: EditorPreferences) => void;
 }
 
-const STORAGE_KEY = 'json-diff-editor-preferences';
+const STORAGE_KEY = "json-diff-editor-preferences";
 
 /**
  * 从本地存储加载用户偏好设置
@@ -24,12 +24,12 @@ export function loadPreferences(): EditorPreferences {
       return JSON.parse(stored);
     }
   } catch (error) {
-    console.error('Failed to load preferences:', error);
+    console.error("Failed to load preferences:", error);
   }
-  
+
   // 默认偏好设置
   return {
-    theme: 'light',
+    theme: "light",
     fontSize: 14,
     minimap: true,
   };
@@ -42,7 +42,7 @@ export function savePreferences(preferences: EditorPreferences): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
   } catch (error) {
-    console.error('Failed to save preferences:', error);
+    console.error("Failed to save preferences:", error);
   }
 }
 
@@ -57,7 +57,7 @@ export function EditorSettings({ preferences, onPreferencesChange }: EditorSetti
     savePreferences(preferences);
   }, [preferences]);
 
-  const handleThemeChange = (theme: 'light' | 'vs-dark') => {
+  const handleThemeChange = (theme: "light" | "vs-dark") => {
     onPreferencesChange({ ...preferences, theme });
   };
 
@@ -71,45 +71,35 @@ export function EditorSettings({ preferences, onPreferencesChange }: EditorSetti
 
   return (
     <div className="editor-settings">
-      <button
-        className="settings-toggle"
-        onClick={() => setIsOpen(!isOpen)}
-        title="编辑器设置"
-      >
+      <button className="settings-toggle" onClick={() => setIsOpen(!isOpen)} title="编辑器设置">
         ⚙️ 设置
       </button>
-      
+
       {isOpen && (
         <div className="settings-panel">
           <div className="settings-header">
             <h3>编辑器设置</h3>
-            <button
-              className="close-button"
-              onClick={() => setIsOpen(false)}
-              aria-label="关闭"
-            >
+            <button className="close-button" onClick={() => setIsOpen(false)} aria-label="关闭">
               ✕
             </button>
           </div>
-          
+
           <div className="settings-content">
             <div className="setting-group">
               <label htmlFor="theme-select">主题</label>
               <select
                 id="theme-select"
                 value={preferences.theme}
-                onChange={(e) => handleThemeChange(e.target.value as 'light' | 'vs-dark')}
+                onChange={(e) => handleThemeChange(e.target.value as "light" | "vs-dark")}
                 className="setting-select"
               >
                 <option value="light">浅色</option>
                 <option value="vs-dark">深色</option>
               </select>
             </div>
-            
+
             <div className="setting-group">
-              <label htmlFor="font-size-input">
-                字体大小: {preferences.fontSize}px
-              </label>
+              <label htmlFor="font-size-input">字体大小: {preferences.fontSize}px</label>
               <input
                 id="font-size-input"
                 type="range"
@@ -120,7 +110,7 @@ export function EditorSettings({ preferences, onPreferencesChange }: EditorSetti
                 className="setting-slider"
               />
             </div>
-            
+
             <div className="setting-group">
               <label className="checkbox-label">
                 <input

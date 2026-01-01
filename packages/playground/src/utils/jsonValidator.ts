@@ -34,7 +34,7 @@ export function validateJSON(jsonString: string): ValidationResult {
 
       if (positionMatch) {
         const position = parseInt(positionMatch[1], 10);
-        const lines = jsonString.substring(0, position).split('\n');
+        const lines = jsonString.substring(0, position).split("\n");
         errorLine = lines.length;
         errorColumn = lines[lines.length - 1].length + 1;
       } else {
@@ -52,7 +52,7 @@ export function validateJSON(jsonString: string): ValidationResult {
 
     return {
       isValid: false,
-      error: '未知的 JSON 解析错误',
+      error: "未知的 JSON 解析错误",
     };
   }
 }

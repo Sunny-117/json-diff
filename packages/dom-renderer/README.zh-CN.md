@@ -67,6 +67,7 @@ new DOMRenderer(config?: RendererConfig)
 ```
 
 **参数:**
+
 - `config?: RendererConfig` - 可选的渲染器配置
 
 **示例:**
@@ -93,6 +94,7 @@ const renderer = new DOMRenderer({
 将完整的 diff 结果渲染为 HTML 元素。
 
 **参数:**
+
 - `diffResult: DiffResult` - 来自 `@json-visual-diff/core` 的 diff 结果
 - `config?: RendererConfig` - 可选配置，覆盖构造函数配置
 
@@ -112,6 +114,7 @@ const element = renderer.render(result, {
 将单个 diff 节点渲染为 HTML 元素。
 
 **参数:**
+
 - `node: DiffNode` - 单个 diff 节点
 - `config?: RendererConfig` - 可选配置
 
@@ -128,6 +131,7 @@ const nodeElement = renderer.renderNode(result.root);
 渲染被添加的节点。
 
 **参数:**
+
 - `node: DiffNode` - 添加的节点
 - `config?: RendererConfig` - 可选配置
 
@@ -138,6 +142,7 @@ const nodeElement = renderer.renderNode(result.root);
 渲染被删除的节点。
 
 **参数:**
+
 - `node: DiffNode` - 删除的节点
 - `config?: RendererConfig` - 可选配置
 
@@ -148,6 +153,7 @@ const nodeElement = renderer.renderNode(result.root);
 渲染被修改的节点。
 
 **参数:**
+
 - `node: DiffNode` - 修改的节点
 - `config?: RendererConfig` - 可选配置
 
@@ -158,6 +164,7 @@ const nodeElement = renderer.renderNode(result.root);
 渲染未改变的节点。
 
 **参数:**
+
 - `node: DiffNode` - 未改变的节点
 - `config?: RendererConfig` - 可选配置
 
@@ -168,6 +175,7 @@ const nodeElement = renderer.renderNode(result.root);
 切换给定路径节点的展开/折叠状态。
 
 **参数:**
+
 - `path: string[]` - 节点的路径
 
 **示例:**
@@ -181,6 +189,7 @@ renderer.toggleExpand(['user', 'address']);
 检查给定路径的节点是否已展开。
 
 **参数:**
+
 - `path: string[]` - 节点的路径
 
 **返回值:** `boolean`
@@ -213,6 +222,7 @@ const renderer = new DOMRenderer({ theme: 'light' });
 ```
 
 默认颜色:
+
 - 添加: `#22863a` (绿色)
 - 删除: `#cb2431` (红色)
 - 修改: `#e36209` (橙色)
@@ -225,6 +235,7 @@ const renderer = new DOMRenderer({ theme: 'dark' });
 ```
 
 默认颜色:
+
 - 添加: `#28a745` (绿色)
 - 删除: `#d73a49` (红色)
 - 修改: `#f97583` (粉色)
@@ -335,7 +346,7 @@ if (result.root.children) {
     <span class="stat-deleted" aria-label="1 items deleted">-1</span>
     <span class="stat-modified" aria-label="2 items modified">~2</span>
   </div>
-  
+
   <!-- 内容 -->
   <div class="json-diff-content" role="tree">
     <div class="diff-node diff-modified" role="treeitem" aria-label="Modified: root">
@@ -452,18 +463,18 @@ import { DOMRenderer } from '@json-visual-diff/dom-renderer';
 
 function DiffViewer({ oldValue, newValue }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (containerRef.current) {
       const result = diff(oldValue, newValue);
       const renderer = new DOMRenderer({ theme: 'light' });
       const element = renderer.render(result);
-      
+
       containerRef.current.innerHTML = '';
       containerRef.current.appendChild(element);
     }
   }, [oldValue, newValue]);
-  
+
   return <div ref={containerRef} />;
 }
 ```
@@ -488,7 +499,7 @@ const renderDiff = () => {
     const result = diff(props.oldValue, props.newValue);
     const renderer = new DOMRenderer({ theme: 'dark' });
     const element = renderer.render(result);
-    
+
     container.value.innerHTML = '';
     container.value.appendChild(element);
   }

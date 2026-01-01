@@ -14,7 +14,7 @@
 
 ### 技术栈（统一用最新版本）
 
-- **语言**：TypeScript 
+- **语言**：TypeScript
 - **包管理**：pnpm workspace
 - **构建工具**：Vite
 - **测试框架**：Vitest + fast-check
@@ -30,19 +30,19 @@ graph TB
         A[Playground App]
         B[第三方应用]
     end
-    
+
     subgraph "渲染层"
         C[DOM Renderer]
         D[Terminal Renderer]
         E[Custom Renderer]
     end
-    
+
     subgraph "核心层"
         F[Diff Engine]
         G[Type Normalizer]
         H[Diff Result Builder]
     end
-    
+
     A --> C
     B --> C
     B --> D
@@ -56,20 +56,22 @@ graph TB
 
 ### 分层说明
 
-
 **核心层（Core Layer）**
+
 - 负责计算两个值之间的差异
 - 处理类型规范化（函数、Date、RegExp 等）
 - 生成标准化的 Diff Result
 - 不依赖任何平台特定的 API
 
 **渲染层（Renderer Layer）**
+
 - 实现 Renderer 接口
 - 将 Diff Result 转换为特定平台的输出
 - 可以是 DOM、终端、Canvas、React 组件等
 - 每个渲染器都是独立的 npm 包
 
 **用户层（Application Layer）**
+
 - 使用核心库和渲染器
 - Playground 是官方提供的演示应用
 - 第三方应用可以自由组合使用
@@ -112,7 +114,6 @@ json-visual-diff/
 ## Components and Interfaces
 
 ### 1. 核心类型定义
-
 
 ```typescript
 /**
@@ -178,7 +179,6 @@ interface DiffOptions {
 
 ### 2. Renderer 接口
 
-
 ```typescript
 /**
  * 渲染器配置接口
@@ -204,27 +204,27 @@ interface Renderer<T> {
    * 渲染 diff 结果
    */
   render(diffResult: DiffResult, config?: RendererConfig): T;
-  
+
   /**
    * 渲染单个节点
    */
   renderNode(node: DiffNode, config?: RendererConfig): T;
-  
+
   /**
    * 渲染添加的节点
    */
   renderAdded(node: DiffNode, config?: RendererConfig): T;
-  
+
   /**
    * 渲染删除的节点
    */
   renderDeleted(node: DiffNode, config?: RendererConfig): T;
-  
+
   /**
    * 渲染修改的节点
    */
   renderModified(node: DiffNode, config?: RendererConfig): T;
-  
+
   /**
    * 渲染未改变的节点
    */
@@ -234,7 +234,6 @@ interface Renderer<T> {
 
 ### 3. 核心 Diff Engine
 
-
 ```typescript
 /**
  * 核心 Diff 引擎类
@@ -242,7 +241,7 @@ interface Renderer<T> {
 class DiffEngine {
   private options: DiffOptions;
   private circularRefs: WeakSet<object>;
-  
+
   constructor(options?: DiffOptions) {
     this.options = {
       maxDepth: Infinity,
@@ -252,7 +251,7 @@ class DiffEngine {
     };
     this.circularRefs = new WeakSet();
   }
-  
+
   /**
    * 计算两个值的差异
    */
@@ -263,16 +262,16 @@ class DiffEngine {
         return this.createCircularNode(path);
       }
     }
-    
+
     // 规范化类型
     const oldType = this.getValueType(oldValue);
     const newType = this.getValueType(newValue);
-    
+
     // 类型不同，直接标记为修改
     if (oldType !== newType) {
       return this.createModifiedNode(path, oldValue, newValue, oldType, newType);
     }
-    
+
     // 根据类型选择比较策略
     switch (oldType) {
       case ValueType.PRIMITIVE:
@@ -295,7 +294,7 @@ class DiffEngine {
         throw new Error(`Unsupported type: ${oldType}`);
     }
   }
-  
+
   /**
    * 比较原始类型
    */
@@ -317,13 +316,12 @@ class DiffEngine {
       newValue
     };
   }
-  
+
   // 其他比较方法...
 }
 ```
 
 ### 4. 数组 Diff 算法（LCS）
-
 
 ```typescript
 /**
@@ -338,7 +336,7 @@ class LCSArrayDiff {
     const m = arr1.length;
     const n = arr2.length;
     const dp: number[][] = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
-    
+
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
         if (this.isEqual(arr1[i - 1], arr2[j - 1])) {
@@ -348,10 +346,10 @@ class LCSArrayDiff {
         }
       }
     }
-    
+
     return dp;
   }
-  
+
   /**
    * 从 LCS 表回溯生成 diff 操作序列
    */
@@ -363,28 +361,28 @@ class LCSArrayDiff {
     j: number
   ): ArrayDiffOp[] {
     if (i === 0 && j === 0) return [];
-    
+
     if (i === 0) {
       return [
         ...this.backtrack(arr1, arr2, dp, i, j - 1),
         { type: 'add', index: j - 1, value: arr2[j - 1] }
       ];
     }
-    
+
     if (j === 0) {
       return [
         ...this.backtrack(arr1, arr2, dp, i - 1, j),
         { type: 'delete', index: i - 1, value: arr1[i - 1] }
       ];
     }
-    
+
     if (this.isEqual(arr1[i - 1], arr2[j - 1])) {
       return [
         ...this.backtrack(arr1, arr2, dp, i - 1, j - 1),
         { type: 'keep', index: i - 1, value: arr1[i - 1] }
       ];
     }
-    
+
     if (dp[i - 1][j] > dp[i][j - 1]) {
       return [
         ...this.backtrack(arr1, arr2, dp, i - 1, j),
@@ -397,7 +395,7 @@ class LCSArrayDiff {
       ];
     }
   }
-  
+
   private static isEqual(a: any, b: any): boolean {
     // 深度相等比较
     return JSON.stringify(a) === JSON.stringify(b);
@@ -413,7 +411,6 @@ interface ArrayDiffOp {
 ```
 
 ### 5. Type Normalizer
-
 
 ```typescript
 /**
@@ -435,35 +432,35 @@ class TypeNormalizer {
     if (typeof value === 'object') return ValueType.OBJECT;
     return ValueType.PRIMITIVE;
   }
-  
+
   /**
    * 规范化函数为可比较的字符串
    */
   static normalizeFunction(fn: Function): string {
     return fn.toString().replace(/\s+/g, ' ').trim();
   }
-  
+
   /**
    * 规范化 Date 为时间戳
    */
   static normalizeDate(date: Date): number {
     return date.getTime();
   }
-  
+
   /**
    * 规范化 RegExp 为字符串表示
    */
   static normalizeRegExp(regexp: RegExp): string {
     return `${regexp.source}|${regexp.flags}`;
   }
-  
+
   /**
    * 规范化 Symbol 为描述字符串
    */
   static normalizeSymbol(symbol: Symbol): string {
     return symbol.toString();
   }
-  
+
   /**
    * 序列化值为可显示的字符串
    */
@@ -491,7 +488,6 @@ class TypeNormalizer {
 ## Data Models
 
 ### DiffResult 数据结构示例
-
 
 ```json
 {
@@ -569,26 +565,26 @@ DOM 渲染器将生成如下 HTML 结构：
     <span class="stat-deleted">-1</span>
     <span class="stat-modified">~3</span>
   </div>
-  
+
   <div class="json-diff-content">
     <div class="diff-node diff-object">
       <div class="diff-line diff-unchanged">
         <span class="key">name:</span>
         <span class="value">"John"</span>
       </div>
-      
+
       <div class="diff-line diff-modified">
         <span class="key">age:</span>
         <span class="old-value">25</span>
         <span class="arrow">→</span>
         <span class="new-value">26</span>
       </div>
-      
+
       <div class="diff-line diff-added">
         <span class="key">email:</span>
         <span class="value">"john@example.com"</span>
       </div>
-      
+
       <div class="diff-line diff-deleted">
         <span class="key">phone:</span>
         <span class="value">"123-456-7890"</span>
@@ -600,10 +596,9 @@ DOM 渲染器将生成如下 HTML 结构：
 
 现在让我进行 Correctness Properties 的 prework 分析：
 
-
 ## Correctness Properties
 
-*属性（Property）是关于系统行为的特征或规则，应该在所有有效执行中保持为真。属性是人类可读规范和机器可验证正确性保证之间的桥梁。通过属性测试，我们可以验证代码在大量随机生成的输入下都能满足这些规则。*
+_属性（Property）是关于系统行为的特征或规则，应该在所有有效执行中保持为真。属性是人类可读规范和机器可验证正确性保证之间的桥梁。通过属性测试，我们可以验证代码在大量随机生成的输入下都能满足这些规则。_
 
 ### 核心 Diff 算法属性
 
@@ -612,7 +607,7 @@ DOM 渲染器将生成如下 HTML 结构：
 **Validates: Requirements 1.1, 3.1**
 
 **Property 2: 自反性（Identity）**
-*对于任意* JSON 对象，将它与自己进行 diff 应该返回所有节点类型都为 UNCHANGED 的结果
+_对于任意_ JSON 对象，将它与自己进行 diff 应该返回所有节点类型都为 UNCHANGED 的结果
 **Validates: Requirements 1.2**
 
 **Property 3: 嵌套结构递归性**
@@ -624,19 +619,20 @@ DOM 渲染器将生成如下 HTML 结构：
 **Validates: Requirements 1.4**
 
 **Property 5: 差异类型完整性**
-*对于任意* diff 结果，每个差异节点应该具有以下特性之一：
+_对于任意_ diff 结果，每个差异节点应该具有以下特性之一：
+
 - 类型为 ADDED 时，应该只包含 newValue
 - 类型为 DELETED 时，应该只包含 oldValue
 - 类型为 MODIFIED 时，应该同时包含 oldValue 和 newValue
 - 类型为 UNCHANGED 时，oldValue 应该等于 newValue
-**Validates: Requirements 3.2, 3.3, 3.4, 3.5**
+  **Validates: Requirements 3.2, 3.3, 3.4, 3.5**
 
 **Property 6: 统计信息一致性**
-*对于任意* diff 结果，stats 中的计数应该等于遍历整个 diff 树时对应类型节点的实际数量
+_对于任意_ diff 结果，stats 中的计数应该等于遍历整个 diff 树时对应类型节点的实际数量
 **Validates: Requirements 3.1**
 
 **Property 7: Diff 结果可序列化**
-*对于任意* diff 结果，将其序列化为 JSON 字符串后再反序列化，应该得到等价的对象结构
+_对于任意_ diff 结果，将其序列化为 JSON 字符串后再反序列化，应该得到等价的对象结构
 **Validates: Requirements 3.7**
 
 ### 扩展类型支持属性
@@ -664,23 +660,23 @@ DOM 渲染器将生成如下 HTML 结构：
 ### 渲染器属性
 
 **Property 13: 自定义渲染器调用**
-*对于任意* diff 结果和自定义渲染器实现，当调用渲染函数时，渲染器的相应方法应该被正确调用，并且每个 diff 节点都应该被处理
+_对于任意_ diff 结果和自定义渲染器实现，当调用渲染函数时，渲染器的相应方法应该被正确调用，并且每个 diff 节点都应该被处理
 **Validates: Requirements 4.2, 4.4**
 
 **Property 14: DOM 渲染输出有效性**
-*对于任意* diff 结果，DOM 渲染器应该生成有效的 HTML 元素，可以被 DOM API 解析和操作
+_对于任意_ diff 结果，DOM 渲染器应该生成有效的 HTML 元素，可以被 DOM API 解析和操作
 **Validates: Requirements 5.2**
 
 **Property 15: DOM 渲染视觉区分**
-*对于任意* diff 结果，DOM 渲染器生成的 HTML 应该为不同类型的差异节点（added、deleted、modified、unchanged）应用不同的 CSS 类名或样式属性
+_对于任意_ diff 结果，DOM 渲染器生成的 HTML 应该为不同类型的差异节点（added、deleted、modified、unchanged）应用不同的 CSS 类名或样式属性
 **Validates: Requirements 5.3, 5.4, 5.5, 5.6**
 
 **Property 16: 渲染配置响应性**
-*对于任意* diff 结果和不同的渲染配置（主题、颜色、缩进等），渲染器应该根据配置生成不同的输出
+_对于任意_ diff 结果和不同的渲染配置（主题、颜色、缩进等），渲染器应该根据配置生成不同的输出
 **Validates: Requirements 5.8**
 
 **Property 17: 可访问性属性存在**
-*对于任意* diff 结果，DOM 渲染器生成的 HTML 应该包含适当的语义化标签和 ARIA 属性以支持屏幕阅读器
+_对于任意_ diff 结果，DOM 渲染器生成的 HTML 应该包含适当的语义化标签和 ARIA 属性以支持屏幕阅读器
 **Validates: Requirements 5.9**
 
 ### Playground 应用属性
@@ -692,13 +688,12 @@ DOM 渲染器将生成如下 HTML 结构：
 ### 性能属性
 
 **Property 19: 深度限制配置有效性**
-*对于任意* JSON 对象和配置的 maxDepth 值，diff 结果中所有节点的 path 长度应该不超过 maxDepth
+_对于任意_ JSON 对象和配置的 maxDepth 值，diff 结果中所有节点的 path 长度应该不超过 maxDepth
 **Validates: Requirements 12.3**
 
 ## Error Handling
 
 ### 错误类型定义
-
 
 ```typescript
 /**
@@ -785,6 +780,7 @@ try {
 **测试库选择**：使用 [fast-check](https://fast-check.dev/) 进行属性测试
 
 **配置要求**：
+
 - 每个属性测试至少运行 **100 次迭代**
 - 每个测试必须引用对应的设计文档属性
 - 标签格式：`Feature: json-visual-diff, Property {number}: {property_text}`
@@ -814,12 +810,14 @@ describe('Core Diff Engine', () => {
 #### 1. 核心算法测试
 
 **单元测试**：
+
 - 基本类型比较（string, number, boolean, null）
 - 对象比较（空对象、单层对象、嵌套对象）
 - 数组比较（空数组、相同数组、不同长度数组）
 - 边界情况（undefined、NaN、Infinity）
 
 **属性测试**：
+
 - Property 1: Diff 结果结构完整性
 - Property 2: 自反性
 - Property 3: 嵌套结构递归性
@@ -831,6 +829,7 @@ describe('Core Diff Engine', () => {
 #### 2. 扩展类型测试
 
 **单元测试**：
+
 - 函数比较（相同函数、不同函数、箭头函数）
 - Date 比较（相同时间、不同时间）
 - RegExp 比较（相同模式、不同模式、不同标志）
@@ -838,6 +837,7 @@ describe('Core Diff Engine', () => {
 - 循环引用处理
 
 **属性测试**：
+
 - Property 8: 函数比较一致性
 - Property 9: Date 比较通过时间戳
 - Property 10: RegExp 比较通过模式和标志
@@ -847,6 +847,7 @@ describe('Core Diff Engine', () => {
 #### 3. LCS 算法测试
 
 **单元测试**：
+
 - 空数组
 - 完全相同的数组
 - 完全不同的数组
@@ -854,18 +855,21 @@ describe('Core Diff Engine', () => {
 - 包含重复元素的数组
 
 **属性测试**：
+
 - LCS 长度不超过较短数组的长度
 - LCS 是两个数组的公共子序列
 
 #### 4. 渲染器测试
 
 **单元测试**：
+
 - 渲染空 diff 结果
 - 渲染单个节点
 - 渲染嵌套结构
 - 应用不同配置
 
 **属性测试**：
+
 - Property 13: 自定义渲染器调用
 - Property 14: DOM 渲染输出有效性
 - Property 15: DOM 渲染视觉区分
@@ -909,12 +913,14 @@ const circularObjectArb = fc.constant({}).map(obj => {
 ### 性能测试
 
 **基准测试**：
+
 - 小型对象（< 10 个节点）
 - 中型对象（10-100 个节点）
 - 大型对象（100-1000 个节点）
 - 超大型对象（> 1000 个节点）
 
 **性能指标**：
+
 - 执行时间
 - 内存使用
 - 与竞品对比
@@ -929,17 +935,17 @@ const circularObjectArb = fc.constant({}).map(obj => {
 
 ### 主要竞品分析
 
-| 特性 | json-visual-diff | jsondiffpatch | deep-diff | json-diff |
-|------|------------------|---------------|-----------|-----------|
-| **核心算法** | LCS + 递归 | LCS + 三向合并 | 递归比较 | 简单递归 |
-| **数组 diff** | ✅ 智能 LCS | ✅ 智能 LCS | ❌ 位置比较 | ❌ 位置比较 |
-| **扩展类型** | ✅ Function/Date/RegExp/Symbol | ⚠️ 部分支持 | ❌ 不支持 | ❌ 不支持 |
-| **循环引用** | ✅ 安全处理 | ✅ 支持 | ❌ 不支持 | ❌ 不支持 |
-| **可插拔渲染** | ✅ Adapter 模式 | ⚠️ 内置 HTML | ❌ 无渲染 | ❌ 无渲染 |
-| **TypeScript** | ✅ 完整类型 | ⚠️ 部分类型 | ❌ 无类型 | ❌ 无类型 |
-| **性能** | ⚡ 优化 | ⚡ 良好 | ⚡ 良好 | ⚡ 一般 |
-| **包大小** | 📦 模块化 | 📦 较大 | 📦 小 | 📦 小 |
-| **维护状态** | 🆕 新项目 | ✅ 活跃 | ⚠️ 较少更新 | ⚠️ 较少更新 |
+| 特性           | json-visual-diff               | jsondiffpatch  | deep-diff   | json-diff   |
+| -------------- | ------------------------------ | -------------- | ----------- | ----------- |
+| **核心算法**   | LCS + 递归                     | LCS + 三向合并 | 递归比较    | 简单递归    |
+| **数组 diff**  | ✅ 智能 LCS                    | ✅ 智能 LCS    | ❌ 位置比较 | ❌ 位置比较 |
+| **扩展类型**   | ✅ Function/Date/RegExp/Symbol | ⚠️ 部分支持    | ❌ 不支持   | ❌ 不支持   |
+| **循环引用**   | ✅ 安全处理                    | ✅ 支持        | ❌ 不支持   | ❌ 不支持   |
+| **可插拔渲染** | ✅ Adapter 模式                | ⚠️ 内置 HTML   | ❌ 无渲染   | ❌ 无渲染   |
+| **TypeScript** | ✅ 完整类型                    | ⚠️ 部分类型    | ❌ 无类型   | ❌ 无类型   |
+| **性能**       | ⚡ 优化                        | ⚡ 良好        | ⚡ 良好     | ⚡ 一般     |
+| **包大小**     | 📦 模块化                      | 📦 较大        | 📦 小       | 📦 小       |
+| **维护状态**   | 🆕 新项目                      | ✅ 活跃        | ⚠️ 较少更新 | ⚠️ 较少更新 |
 
 ### 本 SDK 的独特优势
 
@@ -972,10 +978,12 @@ const circularObjectArb = fc.constant({}).map(obj => {
 ### 设计权衡
 
 **相比 jsondiffpatch**：
+
 - ✅ 优势：更清晰的架构，更好的扩展性
 - ⚠️ 权衡：jsondiffpatch 有更成熟的生态和更多的实际使用案例
 
 **相比 deep-diff**：
+
 - ✅ 优势：更智能的数组 diff，可视化渲染
 - ⚠️ 权衡：包体积稍大（因为包含渲染器）
 
@@ -985,24 +993,28 @@ const circularObjectArb = fc.constant({}).map(obj => {
 ## 实现优先级
 
 ### Phase 1: 核心功能（MVP）
+
 1. 核心 diff 引擎
 2. 基本类型支持
 3. 标准化 Diff Result
 4. 基础单元测试
 
 ### Phase 2: 扩展功能
+
 1. 扩展类型支持（Function、Date、RegExp 等）
 2. LCS 数组 diff
 3. 循环引用处理
 4. 属性测试
 
 ### Phase 3: 渲染层
+
 1. Renderer 接口定义
 2. DOM 渲染器实现
 3. 样式和主题系统
 4. 渲染器测试
 
 ### Phase 4: Playground
+
 1. 基础 UI 框架
 2. JSON 输入和验证
 3. Diff 展示
@@ -1023,6 +1035,7 @@ const circularObjectArb = fc.constant({}).map(obj => {
 - diff-core + diff-renderer-dom
 
 ### Phase 5: 完善和发布
+
 1. 性能优化
 2. 文档完善 Readme
 

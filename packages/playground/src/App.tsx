@@ -1,25 +1,29 @@
-import { useState, useRef, useEffect } from 'react';
-import { MonacoEditor } from './components/MonacoEditor';
-import { EditorSettings, loadPreferences, type EditorPreferences } from './components/EditorSettings';
-import { diff } from '@json-visual-diff/core';
-import { DOMRenderer } from '@json-visual-diff/dom-renderer';
-import type { DiffResult } from '@json-visual-diff/core';
-import { examples, getExampleById } from './examples';
-import { selectFile, readFileAsText, downloadJSON, downloadTextFile } from './utils/fileUtils';
-import './App.css';
+import { useState, useRef, useEffect } from "react";
+import { MonacoEditor } from "./components/MonacoEditor";
+import {
+  EditorSettings,
+  loadPreferences,
+  type EditorPreferences,
+} from "./components/EditorSettings";
+import { diff } from "@json-visual-diff/core";
+import { DOMRenderer } from "@json-visual-diff/dom-renderer";
+import type { DiffResult } from "@json-visual-diff/core";
+import { examples, getExampleById } from "./examples";
+import { selectFile, readFileAsText, downloadJSON, downloadTextFile } from "./utils/fileUtils";
+import "./App.css";
 
 function App() {
-  const [leftJson, setLeftJson] = useState('');
-  const [rightJson, setRightJson] = useState('');
+  const [leftJson, setLeftJson] = useState("");
+  const [rightJson, setRightJson] = useState("");
   const [diffResult, setDiffResult] = useState<DiffResult | null>(null);
-  const [error, setError] = useState<string>('');
-  const [selectedExample, setSelectedExample] = useState<string>('basic');
+  const [error, setError] = useState<string>("");
+  const [selectedExample, setSelectedExample] = useState<string>("basic");
   const [preferences, setPreferences] = useState<EditorPreferences>(loadPreferences());
   const resultContainerRef = useRef<HTMLDivElement>(null);
 
   // 初始化时加载 basic 示例
   useEffect(() => {
-    const example = getExampleById('basic');
+    const example = getExampleById("basic");
     if (example) {
       setLeftJson(example.left);
       setRightJson(example.right);
@@ -30,15 +34,15 @@ function App() {
   useEffect(() => {
     if (diffResult && resultContainerRef.current) {
       // 清空容器
-      resultContainerRef.current.innerHTML = '';
-      
+      resultContainerRef.current.innerHTML = "";
+
       // 创建渲染器并渲染
       const renderer = new DOMRenderer({
-        theme: 'light',
+        theme: "light",
         expandDepth: 3,
         showUnchanged: true,
       });
-      
+
       const renderedElement = renderer.render(diffResult);
       resultContainerRef.current.appendChild(renderedElement);
     }
@@ -47,7 +51,7 @@ function App() {
   // 实时比较：当 JSON 内容改变时自动执行 diff
   useEffect(() => {
     // 清空之前的错误
-    setError('');
+    setError("");
 
     if (!leftJson.trim() || !rightJson.trim()) {
       setDiffResult(null);
@@ -71,31 +75,31 @@ function App() {
   // 处理示例选择
   const handleExampleChange = (exampleId: string) => {
     setSelectedExample(exampleId);
-    
+
     if (!exampleId) {
       // 清空选择
-      setLeftJson('');
-      setRightJson('');
+      setLeftJson("");
+      setRightJson("");
       return;
     }
-    
+
     const example = getExampleById(exampleId);
     if (example) {
       setLeftJson(example.left);
       setRightJson(example.right);
       // 不需要清空结果，实时比较会自动更新
-      setError('');
+      setError("");
     }
   };
 
   // 导入 JSON 文件到左侧编辑器
   const handleImportLeft = async () => {
     try {
-      const file = await selectFile('.json');
+      const file = await selectFile(".json");
       if (file) {
         const content = await readFileAsText(file);
         setLeftJson(content);
-        setSelectedExample(''); // 清空示例选择
+        setSelectedExample(""); // 清空示例选择
       }
     } catch (err) {
       setError(`导入失败: ${err instanceof Error ? err.message : String(err)}`);
@@ -105,11 +109,11 @@ function App() {
   // 导入 JSON 文件到右侧编辑器
   const handleImportRight = async () => {
     try {
-      const file = await selectFile('.json');
+      const file = await selectFile(".json");
       if (file) {
         const content = await readFileAsText(file);
         setRightJson(content);
-        setSelectedExample(''); // 清空示例选择
+        setSelectedExample(""); // 清空示例选择
       }
     } catch (err) {
       setError(`导入失败: ${err instanceof Error ? err.message : String(err)}`);
@@ -119,12 +123,12 @@ function App() {
   // 导出 diff 结果为 JSON
   const handleExportDiff = () => {
     if (!diffResult) {
-      setError('没有可导出的 diff 结果');
+      setError("没有可导出的 diff 结果");
       return;
     }
-    
+
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       downloadJSON(diffResult, `diff-result-${timestamp}.json`);
     } catch (err) {
       setError(`导出失败: ${err instanceof Error ? err.message : String(err)}`);
@@ -134,14 +138,14 @@ function App() {
   // 导出 diff 结果为 HTML
   const handleExportHTML = () => {
     if (!diffResult || !resultContainerRef.current) {
-      setError('没有可导出的 diff 结果');
+      setError("没有可导出的 diff 结果");
       return;
     }
-    
+
     try {
       // 获取渲染的 HTML
       const htmlContent = resultContainerRef.current.innerHTML;
-      
+
       // 创建完整的 HTML 文档
       const fullHTML = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -209,9 +213,9 @@ function App() {
   ${htmlContent}
 </body>
 </html>`;
-      
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      downloadTextFile(fullHTML, `diff-result-${timestamp}.html`, 'text/html');
+
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      downloadTextFile(fullHTML, `diff-result-${timestamp}.html`, "text/html");
     } catch (err) {
       setError(`导出失败: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -240,34 +244,39 @@ function App() {
               ))}
             </select>
           </div>
-          
+
           <div className="file-actions">
-            <button className="action-button" onClick={handleImportLeft} title="导入 JSON 文件到左侧">
+            <button
+              className="action-button"
+              onClick={handleImportLeft}
+              title="导入 JSON 文件到左侧"
+            >
               📁 导入左侧
             </button>
-            <button className="action-button" onClick={handleImportRight} title="导入 JSON 文件到右侧">
+            <button
+              className="action-button"
+              onClick={handleImportRight}
+              title="导入 JSON 文件到右侧"
+            >
               📁 导入右侧
             </button>
-            <button 
-              className="action-button" 
-              onClick={handleExportDiff} 
+            <button
+              className="action-button"
+              onClick={handleExportDiff}
               disabled={!diffResult}
               title="导出 diff 结果为 JSON"
             >
               💾 导出 JSON
             </button>
-            <button 
-              className="action-button" 
-              onClick={handleExportHTML} 
+            <button
+              className="action-button"
+              onClick={handleExportHTML}
               disabled={!diffResult}
               title="导出 diff 结果为 HTML"
             >
               💾 导出 HTML
             </button>
-            <EditorSettings
-              preferences={preferences}
-              onPreferencesChange={setPreferences}
-            />
+            <EditorSettings preferences={preferences} onPreferencesChange={setPreferences} />
           </div>
         </div>
       </header>
@@ -308,7 +317,9 @@ function App() {
           </div>
           <div className="result-content" ref={resultContainerRef}>
             {error && <div className="error-message">{error}</div>}
-            {!error && !diffResult && <div className="placeholder">编辑 JSON 内容，差异结果将实时显示</div>}
+            {!error && !diffResult && (
+              <div className="placeholder">编辑 JSON 内容，差异结果将实时显示</div>
+            )}
           </div>
         </div>
       </div>

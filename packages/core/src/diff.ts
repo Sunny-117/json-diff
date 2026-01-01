@@ -1,6 +1,6 @@
-import { DiffType, ValueType, DiffNode, DiffResult, DiffOptions } from './types.js';
-import { TypeNormalizer } from './normalizer.js';
-import { LCSArrayDiff } from './lcs.js';
+import { DiffType, ValueType, DiffNode, DiffResult, DiffOptions } from "./types.js";
+import { TypeNormalizer } from "./normalizer.js";
+import { LCSArrayDiff } from "./lcs.js";
 
 /**
  * 核心 Diff 引擎类
@@ -9,17 +9,17 @@ import { LCSArrayDiff } from './lcs.js';
 export class DiffEngine {
   private options: Required<DiffOptions>;
   private circularRefs: WeakSet<object>;
-  
+
   constructor(options?: DiffOptions) {
     this.options = {
       maxDepth: options?.maxDepth ?? Infinity,
       ignoreKeys: options?.ignoreKeys ?? [],
-      arrayDiffMode: options?.arrayDiffMode ?? 'lcs',
+      arrayDiffMode: options?.arrayDiffMode ?? "lcs",
       detectCircular: options?.detectCircular ?? true,
     };
     this.circularRefs = new WeakSet();
   }
-  
+
   /**
    * 计算两个值的差异
    * @param oldValue 旧值
@@ -34,31 +34,31 @@ export class DiffEngine {
         return this.createCircularNode(path);
       }
     }
-    
+
     // 检查深度限制
     if (path.length >= this.options.maxDepth) {
       return this.createMaxDepthNode(path, oldValue, newValue);
     }
-    
+
     // 标记对象为已访问（用于循环引用检测）
     if (this.options.detectCircular) {
-      if (oldValue && typeof oldValue === 'object') {
+      if (oldValue && typeof oldValue === "object") {
         this.circularRefs.add(oldValue);
       }
-      if (newValue && typeof newValue === 'object') {
+      if (newValue && typeof newValue === "object") {
         this.circularRefs.add(newValue);
       }
     }
-    
+
     // 规范化类型
     const oldType = TypeNormalizer.getValueType(oldValue);
     const newType = TypeNormalizer.getValueType(newValue);
-    
+
     // 类型不同，直接标记为修改
     if (oldType !== newType) {
       return this.createModifiedNode(path, oldValue, newValue, oldType);
     }
-    
+
     // 根据类型选择比较策略
     switch (oldType) {
       case ValueType.PRIMITIVE:
@@ -81,19 +81,19 @@ export class DiffEngine {
         throw new Error(`Unsupported type: ${oldType}`);
     }
   }
-  
+
   /**
    * 检测循环引用
    * @param value 要检测的值
    * @returns 是否存在循环引用
    */
   private isCircular(value: any): boolean {
-    if (!value || typeof value !== 'object') {
+    if (!value || typeof value !== "object") {
       return false;
     }
     return this.circularRefs.has(value);
   }
-  
+
   /**
    * 创建循环引用节点
    * @param path 路径
@@ -104,11 +104,11 @@ export class DiffEngine {
       type: DiffType.MODIFIED,
       path,
       valueType: ValueType.OBJECT,
-      oldValue: '[Circular Reference]',
-      newValue: '[Circular Reference]',
+      oldValue: "[Circular Reference]",
+      newValue: "[Circular Reference]",
     };
   }
-  
+
   /**
    * 创建达到最大深度的节点
    * @param path 路径
@@ -122,11 +122,11 @@ export class DiffEngine {
       type,
       path,
       valueType: TypeNormalizer.getValueType(oldValue),
-      oldValue: '[Max Depth Reached]',
-      newValue: '[Max Depth Reached]',
+      oldValue: "[Max Depth Reached]",
+      newValue: "[Max Depth Reached]",
     };
   }
-  
+
   /**
    * 创建修改节点（类型不同时）
    * @param path 路径
@@ -149,7 +149,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 比较原始类型
    * @param oldValue 旧值
@@ -162,7 +162,7 @@ export class DiffEngine {
     oldValue: any,
     newValue: any,
     path: string[],
-    valueType: ValueType
+    valueType: ValueType,
   ): DiffNode {
     if (oldValue === newValue) {
       return {
@@ -181,7 +181,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 比较对象
    * @param oldValue 旧对象
@@ -194,17 +194,17 @@ export class DiffEngine {
     const oldKeys = Object.keys(oldValue);
     const newKeys = Object.keys(newValue);
     const allKeys = new Set([...oldKeys, ...newKeys]);
-    
+
     // 遍历所有键
     for (const key of allKeys) {
       // 检查是否在忽略列表中
       if (this.options.ignoreKeys.includes(key)) {
         continue;
       }
-      
+
       const hasOld = key in oldValue;
       const hasNew = key in newValue;
-      
+
       if (hasOld && hasNew) {
         // 键在两个对象中都存在，递归比较
         const childDiff = this.diff(oldValue[key], newValue[key], [...path, key]);
@@ -227,11 +227,11 @@ export class DiffEngine {
         });
       }
     }
-    
+
     // 判断对象整体的差异类型
-    const hasChanges = children.some(child => child.type !== DiffType.UNCHANGED);
+    const hasChanges = children.some((child) => child.type !== DiffType.UNCHANGED);
     const type = hasChanges ? DiffType.MODIFIED : DiffType.UNCHANGED;
-    
+
     return {
       type,
       path,
@@ -241,7 +241,7 @@ export class DiffEngine {
       children,
     };
   }
-  
+
   /**
    * 比较数组
    * @param oldValue 旧数组
@@ -251,27 +251,26 @@ export class DiffEngine {
    */
   private diffArray(oldValue: any[], newValue: any[], path: string[]): DiffNode {
     const children: DiffNode[] = [];
-    
-    if (this.options.arrayDiffMode === 'lcs') {
+
+    if (this.options.arrayDiffMode === "lcs") {
       // 使用 LCS 算法进行智能比较
       const ops = LCSArrayDiff.diff(oldValue, newValue);
       let oldIndex = 0;
       let newIndex = 0;
-      
+
       for (const op of ops) {
         switch (op.type) {
-          case 'keep':
+          case "keep":
             // 元素保持不变，递归比较
-            const childDiff = this.diff(
-              oldValue[oldIndex],
-              newValue[newIndex],
-              [...path, String(newIndex)]
-            );
+            const childDiff = this.diff(oldValue[oldIndex], newValue[newIndex], [
+              ...path,
+              String(newIndex),
+            ]);
             children.push(childDiff);
             oldIndex++;
             newIndex++;
             break;
-          case 'add':
+          case "add":
             // 元素被添加
             children.push({
               type: DiffType.ADDED,
@@ -281,7 +280,7 @@ export class DiffEngine {
             });
             newIndex++;
             break;
-          case 'delete':
+          case "delete":
             // 元素被删除
             children.push({
               type: DiffType.DELETED,
@@ -291,7 +290,7 @@ export class DiffEngine {
             });
             oldIndex++;
             break;
-          case 'modify':
+          case "modify":
             // 元素被修改
             children.push({
               type: DiffType.MODIFIED,
@@ -311,7 +310,7 @@ export class DiffEngine {
       for (let i = 0; i < maxLength; i++) {
         const hasOld = i < oldValue.length;
         const hasNew = i < newValue.length;
-        
+
         if (hasOld && hasNew) {
           const childDiff = this.diff(oldValue[i], newValue[i], [...path, String(i)]);
           children.push(childDiff);
@@ -332,11 +331,11 @@ export class DiffEngine {
         }
       }
     }
-    
+
     // 判断数组整体的差异类型
-    const hasChanges = children.some(child => child.type !== DiffType.UNCHANGED);
+    const hasChanges = children.some((child) => child.type !== DiffType.UNCHANGED);
     const type = hasChanges ? DiffType.MODIFIED : DiffType.UNCHANGED;
-    
+
     return {
       type,
       path,
@@ -346,7 +345,7 @@ export class DiffEngine {
       children,
     };
   }
-  
+
   /**
    * 比较函数
    * @param oldValue 旧函数
@@ -357,7 +356,7 @@ export class DiffEngine {
   private diffFunction(oldValue: Function, newValue: Function, path: string[]): DiffNode {
     const oldNormalized = TypeNormalizer.normalizeFunction(oldValue);
     const newNormalized = TypeNormalizer.normalizeFunction(newValue);
-    
+
     if (oldNormalized === newNormalized) {
       return {
         type: DiffType.UNCHANGED,
@@ -375,7 +374,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 比较 Date 对象
    * @param oldValue 旧 Date
@@ -386,7 +385,7 @@ export class DiffEngine {
   private diffDate(oldValue: Date, newValue: Date, path: string[]): DiffNode {
     const oldTime = TypeNormalizer.normalizeDate(oldValue);
     const newTime = TypeNormalizer.normalizeDate(newValue);
-    
+
     if (oldTime === newTime) {
       return {
         type: DiffType.UNCHANGED,
@@ -404,7 +403,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 比较 RegExp 对象
    * @param oldValue 旧 RegExp
@@ -415,7 +414,7 @@ export class DiffEngine {
   private diffRegExp(oldValue: RegExp, newValue: RegExp, path: string[]): DiffNode {
     const oldNormalized = TypeNormalizer.normalizeRegExp(oldValue);
     const newNormalized = TypeNormalizer.normalizeRegExp(newValue);
-    
+
     if (oldNormalized === newNormalized) {
       return {
         type: DiffType.UNCHANGED,
@@ -433,7 +432,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 比较 Symbol
    * @param oldValue 旧 Symbol
@@ -444,7 +443,7 @@ export class DiffEngine {
   private diffSymbol(oldValue: Symbol, newValue: Symbol, path: string[]): DiffNode {
     const oldNormalized = TypeNormalizer.normalizeSymbol(oldValue);
     const newNormalized = TypeNormalizer.normalizeSymbol(newValue);
-    
+
     if (oldNormalized === newNormalized) {
       return {
         type: DiffType.UNCHANGED,
@@ -462,7 +461,7 @@ export class DiffEngine {
       newValue,
     };
   }
-  
+
   /**
    * 计算完整的 diff 结果（包含统计信息）
    * @param oldValue 旧值
@@ -472,19 +471,19 @@ export class DiffEngine {
   compute(oldValue: any, newValue: any): DiffResult {
     // 重置循环引用检测
     this.circularRefs = new WeakSet();
-    
+
     // 计算 diff
     const root = this.diff(oldValue, newValue);
-    
+
     // 计算统计信息
     const stats = this.computeStats(root);
-    
+
     return {
       root,
       stats,
     };
   }
-  
+
   /**
    * 计算统计信息
    * @param node 根节点
@@ -502,7 +501,7 @@ export class DiffEngine {
       modified: 0,
       unchanged: 0,
     };
-    
+
     const traverse = (n: DiffNode) => {
       // 统计当前节点
       switch (n.type) {
@@ -519,7 +518,7 @@ export class DiffEngine {
           stats.unchanged++;
           break;
       }
-      
+
       // 递归统计子节点
       if (n.children) {
         for (const child of n.children) {
@@ -527,9 +526,9 @@ export class DiffEngine {
         }
       }
     };
-    
+
     traverse(node);
-    
+
     return stats;
   }
 }

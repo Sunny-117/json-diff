@@ -5,11 +5,5 @@
     "suspicious": "warn",
     "perf": "warn"
   },
-  "ignore_patterns": [
-    "node_modules",
-    "dist",
-    "coverage",
-    "*.config.ts",
-    "*.config.js"
-  ]
+  "ignore_patterns": ["node_modules", "dist", "coverage", "*.config.ts", "*.config.js"]
 }

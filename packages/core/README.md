@@ -64,6 +64,7 @@ console.log(result);
 Computes the difference between two values and returns a DiffResult.
 
 **Parameters:**
+
 - `oldValue: any` - The original value
 - `newValue: any` - The new value to compare against
 - `options?: DiffOptions` - Optional configuration
@@ -377,7 +378,7 @@ document.body.appendChild(htmlElement);
 ## Performance Considerations
 
 - **Large Objects**: Use `maxDepth` option to limit comparison depth
-- **Large Arrays**: LCS algorithm is O(m*n), consider using `arrayDiffMode: 'position'` for very large arrays
+- **Large Arrays**: LCS algorithm is O(m\*n), consider using `arrayDiffMode: 'position'` for very large arrays
 - **Circular References**: Enable `detectCircular` to prevent infinite loops (enabled by default)
 
 ## License

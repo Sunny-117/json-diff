@@ -44,6 +44,7 @@ pnpm --filter @json-visual-diff/core build
 **结果**: ✅ 构建成功
 
 **生成的文件**:
+
 - ✅ `dist/index.js` - 主入口文件
 - ✅ `dist/index.d.ts` - TypeScript 类型定义
 - ✅ `dist/diff.js` + `dist/diff.d.ts` - Diff 引擎
@@ -56,6 +57,7 @@ pnpm --filter @json-visual-diff/core build
 ### 4. 包配置验证
 
 **package.json 配置**:
+
 - ✅ `"type": "module"` - ESM 模块
 - ✅ `"main": "./dist/index.js"` - 主入口
 - ✅ `"types": "./dist/index.d.ts"` - 类型定义
@@ -109,6 +111,7 @@ pnpm --filter @json-visual-diff/core build
 所有 19 个正确性属性都已实现并通过测试：
 
 **核心 Diff 算法属性** (Property 1-7):
+
 - ✅ Property 1: Diff 结果结构完整性
 - ✅ Property 2: 自反性（Identity）
 - ✅ Property 3: 嵌套结构递归性
@@ -118,6 +121,7 @@ pnpm --filter @json-visual-diff/core build
 - ✅ Property 7: Diff 结果可序列化
 
 **扩展类型支持属性** (Property 8-12):
+
 - ✅ Property 8: 函数比较一致性
 - ✅ Property 9: Date 比较通过时间戳
 - ✅ Property 10: RegExp 比较通过模式和标志
@@ -129,20 +133,24 @@ pnpm --filter @json-visual-diff/core build
 核心包正确导出以下 API：
 
 **函数**:
+
 - `diff(oldValue, newValue, options?)` - 主 diff 函数
 - `computeLCS(arr1, arr2)` - LCS 计算
 - `backtrack(arr1, arr2, dp, i, j)` - LCS 回溯
 - `isEqual(a, b)` - 深度相等比较
 
 **类**:
+
 - `DiffEngine` - Diff 引擎类
 - `TypeNormalizer` - 类型规范化器类
 
 **枚举**:
+
 - `DiffType` - 差异类型枚举
 - `ValueType` - 值类型枚举
 
 **接口** (TypeScript):
+
 - `DiffNode` - 差异节点接口
 - `DiffResult` - Diff 结果接口
 - `DiffOptions` - Diff 配置选项

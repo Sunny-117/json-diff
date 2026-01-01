@@ -2,6 +2,17 @@
   "name": "@json-visual-diff/core",
   "version": "0.0.1",
   "description": "核心差异算法引擎，提供高性能的 JSON 对象比较功能，支持智能数组对比、扩展类型和循环引用检测",
+  "keywords": [
+    "algorithm",
+    "compare",
+    "diff",
+    "json"
+  ],
+  "license": "MIT",
+  "author": "",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -13,9 +24,6 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsdown",
     "build:watch": "tsdown --watch",
@@ -23,14 +31,6 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": [
-    "json",
-    "diff",
-    "compare",
-    "algorithm"
-  ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "fast-check": "^3.22.0",
     "typescript": "^5.7.3",

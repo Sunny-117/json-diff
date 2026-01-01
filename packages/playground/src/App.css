@@ -5,9 +5,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
@@ -231,7 +231,7 @@ body {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-weight: 600;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace;
 }
 
 .stat-item.added {
@@ -259,7 +259,7 @@ body {
   padding: 1rem;
   overflow: auto;
   background-color: #fafafa;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace;
   font-size: 14px;
 }
 
@@ -279,7 +279,7 @@ body {
 
 /* Diff 渲染样式 */
 .json-diff-container {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -333,7 +333,7 @@ body {
 }
 
 .value {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace;
 }
 
 .old-value {
@@ -359,41 +359,41 @@ body {
   .main-layout {
     flex-direction: column;
   }
-  
+
   .editors-panel,
   .result-panel {
     flex: 1;
     min-height: 300px;
   }
-  
+
   .app-header {
     flex-direction: column;
     align-items: flex-start;
     padding: 0.75rem 1rem;
   }
-  
+
   .header-left {
     width: 100%;
   }
-  
+
   .header-right {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .example-selector {
     width: 100%;
   }
-  
+
   .example-select {
     flex: 1;
   }
-  
+
   .file-actions {
     justify-content: stretch;
   }
-  
+
   .action-button {
     flex: 1;
     justify-content: center;
@@ -404,24 +404,24 @@ body {
   .header-left h1 {
     font-size: 1.1rem;
   }
-  
+
   .result-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .result-stats {
     width: 100%;
   }
-  
+
   .file-actions {
     flex-direction: column;
   }
-  
+
   .action-button {
     width: 100%;
   }
-  
+
   .main-layout {
     padding: 0.5rem;
     gap: 0.5rem;
@@ -433,29 +433,29 @@ body {
   .app-header {
     padding: 0.5rem 0.75rem;
   }
-  
+
   .header-left h1 {
     font-size: 1rem;
   }
-  
+
   .header-right {
     gap: 0.5rem;
   }
-  
+
   .example-selector label {
     font-size: 0.85rem;
   }
-  
+
   .example-select {
     font-size: 0.8rem;
     padding: 0.35rem 0.6rem;
   }
-  
+
   .action-button {
     font-size: 0.8rem;
     padding: 0.35rem 0.6rem;
   }
-  
+
   .result-stats {
     flex-wrap: wrap;
     gap: 0.5rem;

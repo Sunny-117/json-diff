@@ -1,13 +1,13 @@
-import { useRef, useEffect } from 'react';
-import Editor, { OnMount } from '@monaco-editor/react';
-import type { editor } from 'monaco-editor';
+import { useRef, useEffect } from "react";
+import Editor, { OnMount } from "@monaco-editor/react";
+import type { editor } from "monaco-editor";
 
 interface MonacoEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   title: string;
-  theme?: 'light' | 'vs-dark';
+  theme?: "light" | "vs-dark";
   fontSize?: number;
   minimap?: boolean;
 }
@@ -20,7 +20,7 @@ export function MonacoEditor({
   value,
   onChange,
   title,
-  theme = 'light',
+  theme = "light",
   fontSize = 14,
   minimap = true,
 }: MonacoEditorProps) {
@@ -28,13 +28,13 @@ export function MonacoEditor({
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
-    
+
     // 设置编辑器焦点
     editor.focus();
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    onChange(value || '');
+    onChange(value || "");
   };
 
   // 当主题或字体大小改变时更新编辑器
@@ -59,13 +59,13 @@ export function MonacoEditor({
           value={value}
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
-          theme={theme === 'light' ? 'vs' : 'vs-dark'}
+          theme={theme === "light" ? "vs" : "vs-dark"}
           options={{
             fontSize,
             minimap: { enabled: minimap },
             automaticLayout: true,
             scrollBeyondLastLine: false,
-            wordWrap: 'on',
+            wordWrap: "on",
             formatOnPaste: true,
             formatOnType: true,
             tabSize: 2,
@@ -74,25 +74,25 @@ export function MonacoEditor({
               enabled: true,
             },
             folding: true,
-            foldingStrategy: 'indentation',
-            showFoldingControls: 'always',
-            matchBrackets: 'always',
-            autoClosingBrackets: 'always',
-            autoClosingQuotes: 'always',
+            foldingStrategy: "indentation",
+            showFoldingControls: "always",
+            matchBrackets: "always",
+            autoClosingBrackets: "always",
+            autoClosingQuotes: "always",
             quickSuggestions: {
               other: true,
               comments: false,
               strings: true,
             },
             suggestOnTriggerCharacters: true,
-            acceptSuggestionOnEnter: 'on',
-            snippetSuggestions: 'inline',
-            renderLineHighlight: 'all',
-            lineNumbers: 'on',
+            acceptSuggestionOnEnter: "on",
+            snippetSuggestions: "inline",
+            renderLineHighlight: "all",
+            lineNumbers: "on",
             glyphMargin: true,
             scrollbar: {
-              vertical: 'visible',
-              horizontal: 'visible',
+              vertical: "visible",
+              horizontal: "visible",
               useShadows: false,
               verticalScrollbarSize: 10,
               horizontalScrollbarSize: 10,

@@ -64,6 +64,7 @@ console.log(result);
 计算两个值之间的差异并返回 DiffResult。
 
 **参数:**
+
 - `oldValue: any` - 原始值
 - `newValue: any` - 要比较的新值
 - `options?: DiffOptions` - 可选配置
@@ -377,7 +378,7 @@ document.body.appendChild(htmlElement);
 ## 性能考虑
 
 - **大型对象**: 使用 `maxDepth` 选项限制比较深度
-- **大型数组**: LCS 算法的时间复杂度为 O(m*n)，对于非常大的数组考虑使用 `arrayDiffMode: 'position'`
+- **大型数组**: LCS 算法的时间复杂度为 O(m\*n)，对于非常大的数组考虑使用 `arrayDiffMode: 'position'`
 - **循环引用**: 启用 `detectCircular` 以防止无限循环（默认启用）
 
 ## 许可证

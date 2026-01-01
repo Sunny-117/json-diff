@@ -10,20 +10,20 @@
 export function readFileAsText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onload = (event) => {
       const content = event.target?.result;
-      if (typeof content === 'string') {
+      if (typeof content === "string") {
         resolve(content);
       } else {
-        reject(new Error('Failed to read file as text'));
+        reject(new Error("Failed to read file as text"));
       }
     };
-    
+
     reader.onerror = () => {
-      reject(new Error('Failed to read file'));
+      reject(new Error("Failed to read file"));
     };
-    
+
     reader.readAsText(file);
   });
 }
@@ -37,21 +37,21 @@ export function readFileAsText(file: File): Promise<string> {
 export function downloadTextFile(
   content: string,
   filename: string,
-  mimeType: string = 'application/json'
+  mimeType: string = "application/json",
 ): void {
   // 创建 Blob 对象
   const blob = new Blob([content], { type: mimeType });
-  
+
   // 创建下载链接
   const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
   link.download = filename;
-  
+
   // 触发下载
   document.body.appendChild(link);
   link.click();
-  
+
   // 清理
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
@@ -64,7 +64,7 @@ export function downloadTextFile(
  */
 export function downloadJSON(data: any, filename: string): void {
   const content = JSON.stringify(data, null, 2);
-  downloadTextFile(content, filename, 'application/json');
+  downloadTextFile(content, filename, "application/json");
 }
 
 /**
@@ -72,22 +72,22 @@ export function downloadJSON(data: any, filename: string): void {
  * @param accept 接受的文件类型
  * @returns Promise<File | null> 选择的文件
  */
-export function selectFile(accept: string = '.json'): Promise<File | null> {
+export function selectFile(accept: string = ".json"): Promise<File | null> {
   return new Promise((resolve) => {
-    const input = document.createElement('input');
-    input.type = 'file';
+    const input = document.createElement("input");
+    input.type = "file";
     input.accept = accept;
-    
+
     input.onchange = (event) => {
       const target = event.target as HTMLInputElement;
       const file = target.files?.[0] || null;
       resolve(file);
     };
-    
+
     input.oncancel = () => {
       resolve(null);
     };
-    
+
     input.click();
   });
 }
