@@ -13,9 +13,18 @@ function App() {
   const [rightJson, setRightJson] = useState('');
   const [diffResult, setDiffResult] = useState<DiffResult | null>(null);
   const [error, setError] = useState<string>('');
-  const [selectedExample, setSelectedExample] = useState<string>('');
+  const [selectedExample, setSelectedExample] = useState<string>('basic');
   const [preferences, setPreferences] = useState<EditorPreferences>(loadPreferences());
   const resultContainerRef = useRef<HTMLDivElement>(null);
+
+  // 初始化时加载 basic 示例
+  useEffect(() => {
+    const example = getExampleById('basic');
+    if (example) {
+      setLeftJson(example.left);
+      setRightJson(example.right);
+    }
+  }, []);
 
   // 当 diffResult 改变时，使用 DOM 渲染器渲染结果
   useEffect(() => {
@@ -35,12 +44,38 @@ function App() {
     }
   }, [diffResult]);
 
+  // 实时比较：当 JSON 内容改变时自动执行 diff
+  useEffect(() => {
+    // 清空之前的错误
+    setError('');
+
+    if (!leftJson.trim() || !rightJson.trim()) {
+      setDiffResult(null);
+      return;
+    }
+
+    try {
+      // 解析 JSON
+      const leftValue = JSON.parse(leftJson);
+      const rightValue = JSON.parse(rightJson);
+
+      // 计算 diff
+      const result = diff(leftValue, rightValue);
+      setDiffResult(result);
+    } catch (err) {
+      setError(`比较失败: ${err instanceof Error ? err.message : String(err)}`);
+      setDiffResult(null);
+    }
+  }, [leftJson, rightJson]);
+
   // 处理示例选择
   const handleExampleChange = (exampleId: string) => {
     setSelectedExample(exampleId);
     
     if (!exampleId) {
       // 清空选择
+      setLeftJson('');
+      setRightJson('');
       return;
     }
     
@@ -48,8 +83,7 @@ function App() {
     if (example) {
       setLeftJson(example.left);
       setRightJson(example.right);
-      // 清空之前的结果
-      setDiffResult(null);
+      // 不需要清空结果，实时比较会自动更新
       setError('');
     }
   };
@@ -183,29 +217,6 @@ function App() {
     }
   };
 
-  const handleCompare = () => {
-    // 清空之前的错误和结果
-    setError('');
-    setDiffResult(null);
-
-    if (!leftJson.trim() || !rightJson.trim()) {
-      setError('请输入要比较的 JSON 数据');
-      return;
-    }
-
-    try {
-      // 解析 JSON
-      const leftValue = JSON.parse(leftJson);
-      const rightValue = JSON.parse(rightJson);
-
-      // 计算 diff
-      const result = diff(leftValue, rightValue);
-      setDiffResult(result);
-    } catch (err) {
-      setError(`比较失败: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  };
-
   return (
     <div className="app-container">
       <header className="app-header">
@@ -280,12 +291,6 @@ function App() {
             fontSize={preferences.fontSize}
             minimap={preferences.minimap}
           />
-          
-          <div className="compare-section">
-            <button className="compare-button" onClick={handleCompare}>
-              比较差异
-            </button>
-          </div>
         </div>
 
         <div className="result-panel">
@@ -303,7 +308,7 @@ function App() {
           </div>
           <div className="result-content" ref={resultContainerRef}>
             {error && <div className="error-message">{error}</div>}
-            {!error && !diffResult && <div className="placeholder">点击"比较差异"按钮查看结果</div>}
+            {!error && !diffResult && <div className="placeholder">编辑 JSON 内容，差异结果将实时显示</div>}
           </div>
         </div>
       </div>
