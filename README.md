@@ -61,7 +61,8 @@ json-visual-diff/
 ## 安装依赖
 
 ```bash
-pnpm install
+pnpm install @json-visual-diff/core
+pnpm install @json-visual-diff/dom-renderer
 ```
 
 ## 可用脚本
@@ -95,7 +96,7 @@ DOM 渲染器，将差异结果渲染为可交互的浏览器 DOM 元素。
 - **无障碍访问**：语义化 HTML 和 ARIA 属性，支持屏幕阅读器
 - **键盘导航**：完整的键盘操作支持
 
-### @json-visual-diff/playground
+### playground
 
 交互式演示应用，提供完整的差异对比体验。
 
